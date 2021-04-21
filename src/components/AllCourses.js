@@ -1,22 +1,55 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Course from "./Course";
+import base_url from "../api/bootapi";
+import axios from "axios"
+import { toast } from "react-toastify";
 
-const AllCourses=()=> {
+const AllCourses = () => {
+    useEffect(() => {
+        document.title = "All Courses"
+    }, []);
+
+    //function to call server
+    const getAllCoursesFromServer = () => {
+        axios.get(`${base_url}/courses`).then(
+            (response) => {
+                console.log(response.data);
+                toast.success("Course data has been loaded", {
+                    position: "bottom-center"
+                });
+                setCourses(response.data)
+            },
+            (error) => {
+                console.log(error);
+                toast.error("Something went wrong", {
+                    position: "bottom-center"
+                });
+            }
+        );
+    }
+
+    useEffect(() => {
+        getAllCoursesFromServer();
+    }, []);
+
     const [courses, setCourses] = useState([
-        {title:"Java core", description:"Java core tutorial for beginner"},
-        {title:"Spring", description:"Spring tutorial for beginner"},
-        {title:"React JS", description:"React JS tutorial for beginner"}
+        
     ]);
-    return(
+
+    const updateCourse = (courseId)=>{
+        setCourses(courses.filter(c => c.courseId != courseId));
+    }
+
+    return (
         <div className="text-center">
             <h1>All Courses</h1>
             <p>
                 List of courses are given bellow
             </p>
             {
-                courses.length > 0 
-                ? courses.map(course => <Course course={course}/>)
-                : "No Courses Available"
+                courses.length > 0
+                    ? courses.map(course => <Course course={course} update={updateCourse}/>)
+                    : "No Courses Available"
             }
         </div>
     );

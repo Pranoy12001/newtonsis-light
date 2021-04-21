@@ -5,6 +5,8 @@ import Header from './components/Header';
 import Menu from './components/Menu';
 import Home from './components/Home';
 import {BrowserRouter as Router, Route} from "react-router-dom";
+import AddCourse from './components/AddCourse';
+import AllCourses from './components/AllCourses';
 
 function App() {
   const buttonHandler = ()=> {
@@ -22,7 +24,9 @@ function App() {
               <Menu/>
             </Col>
             <Col md={8}>
-              <Home/>
+              <Route path="/" component={Home} exact/>
+              <Route path="/add-course" component={AddCourse} exact/>
+              <Route path="/view-courses" component={AllCourses} exact/>
             </Col>
           </Row>
         </Container>
