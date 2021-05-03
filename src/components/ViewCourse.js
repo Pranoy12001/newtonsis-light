@@ -3,14 +3,21 @@ import { Button, Container, Form, FormGroup, Input, Label } from "reactstrap";
 import axios from "axios";
 import base_url from "../api/bootapi";
 import { toast } from "react-toastify";
-import { useHistory } from "react-router-dom"
+import { useLocation, useHistory } from "react-router-dom"
 
-const AddCourse = () => {
+function ViewCourse() {
+    const location = useLocation();
+    const previousCourse = location.state.course;
+
     useEffect(() => {
-        document.title = "Add Course"
+        document.title = "Update Course"
     }, []);
 
-    const [course, setCourse] = useState({});
+    const [course, setCourse] = useState({
+        courseId: previousCourse.courseId,
+        courseTitle: previousCourse.courseTitle,
+        description: previousCourse.description
+    });
 
     const handleForm = (e) => {
         postDataToServer(course);
@@ -18,7 +25,6 @@ const AddCourse = () => {
     };
 
     const history = useHistory();
-
     const postDataToServer = (course) => {
         axios.post(`${base_url}/courses`, course).then(
             (respone) => {
@@ -38,25 +44,23 @@ const AddCourse = () => {
 
     return (
         <Fragment>
-            <h1 className="text-center my-3">Fill Course Details</h1>
+            <h1 className="text-center my-3">Update the Course Details</h1>
             <Form onSubmit={handleForm}>
                 <FormGroup>
                     <Label for="courseId">Course Id</Label>
                     <Input
                         type="text"
-                        placeholder="Enter here"
+                        value={course.courseId}
                         name="courseId"
                         id="courseId"
-                        onChange={(e) => {
-                            setCourse({ ...course, courseId: e.target.value })
-                        }}
+                        readOnly
                     />
                 </FormGroup>
                 <FormGroup>
                     <Label for="courseTitle">Course Title</Label>
                     <Input
                         type="text"
-                        placeholder="Enter here"
+                        value={course.courseTitle}
                         name="courseTitle"
                         id="courseTitle"
                         onChange={(e) => {
@@ -68,7 +72,7 @@ const AddCourse = () => {
                     <Label for="description">Description</Label>
                     <Input
                         type="textarea"
-                        placeholder="Enter here"
+                        value={course.description}
                         name="description"
                         id="description"
                         style={{ height: 150 }}
@@ -78,12 +82,11 @@ const AddCourse = () => {
                     />
                 </FormGroup>
                 <Container className="text-center">
-                    <Button color="success" type="submit">Add Course</Button>
-                    <Button color="warning ml-2" type="reset">Clear</Button>
+                    <Button color="success" type="submit">Update Course</Button>
                 </Container>
             </Form>
         </Fragment>
-    );
+    )
 }
 
-export default AddCourse;
+export default ViewCourse;

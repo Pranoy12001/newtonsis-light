@@ -13,14 +13,12 @@ const AllCourses = () => {
     const getAllCoursesFromServer = () => {
         axios.get(`${base_url}/courses`).then(
             (response) => {
-                console.log(response.data);
                 toast.success("Course data has been loaded", {
                     position: "bottom-center"
                 });
                 setCourses(response.data)
             },
             (error) => {
-                console.log(error);
                 toast.error("Something went wrong", {
                     position: "bottom-center"
                 });
@@ -33,11 +31,11 @@ const AllCourses = () => {
     }, []);
 
     const [courses, setCourses] = useState([
-        
+
     ]);
 
-    const updateCourse = (courseId)=>{
-        setCourses(courses.filter(c => c.courseId != courseId));
+    const updateCourse = (courseId) => {
+        setCourses(courses.filter(c => c.courseId !== courseId));
     }
 
     return (
@@ -48,7 +46,7 @@ const AllCourses = () => {
             </p>
             {
                 courses.length > 0
-                    ? courses.map(course => <Course course={course} update={updateCourse}/>)
+                    ? courses.map(course => <Course key={course.courseId} course={course} update={updateCourse} />)
                     : "No Courses Available"
             }
         </div>
